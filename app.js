@@ -49,7 +49,7 @@ SpeakersList.prototype.addSpeaker = function (name){
 function ModeratedCaucus(length, speakingtime, topic){
   this.length = length;
   this.speakingtime = speakingtime;
-  this.topic = topic;
+  this.topic = topic || "";
 
   if (this.length === 0 || this.speakingtime === 0)
     throw new Error("Invalid caucus length and/or speaking time");
@@ -70,6 +70,66 @@ ModeratedCaucus.prototype.extend = function (ext){
     throw new Error("Invalid extension time");
 }
 
+/**
+* Represents an unmoderated caucus
+* @param length The length of the unmod in minutes as an int
+*/
+function UnmoderatedCaucus(length){
+  this.length = length;
+  if (this.length === 0)
+    throw new Error("Invalid caucus length");
+}
+UnmoderatedCaucus.prototype = Debate;
+
+/**
+* Represents an issue to be voted on
+* @param infavor All those in favor
+* @param opposed All those opposed
+* @param abstaining All those abstaining
+* @param type The type of majority vote (0 = simple majority, 1 = 2/3 majority)
+*/
+function VotingIssue(infavor, opposed, abstaining, type){
+  this.infavor = infavor || 0;
+  this.opposed = opposed || 0;
+  this.abstaining = abstaining || 0;
+  this.type = type;
+  this.passed = false;
+  
+  if (this.type !== 0 || this.type !== 1)
+    throw new Error("Invalid type of majority");
+  
+  var total = this.infavor + this.opposed + this.abstaining;
+  if (this.type === 0)
+    if (total / 2 < this.infavor)
+      this.passed = true;
+  else
+    if (total * 2 / 3 < this.infavor)
+      this.passed = true;
+}
+
+/** 
+* Changes the amount of those in favor
+* @param infavor New amount of those in favor
+*/
+function setInFavor(infavor){
+  this.infavor = infavor;
+}
+
+/**
+* Changes the amount of those opposed
+* @param opposed New amount of those opposed
+*/
+function setOpposed(opposed){
+  this.opposed = opposed;
+}
+
+/** 
+* Changes the amount of those abstaining
+* @param abstaining New amount of those abstaining
+*/
+function setAbstaining(abstaining){
+  this.abstaining = abstaining;
+}
 
 var debate0 = new Debate("WHO",["Malaria"],["UK","USA","France","Russia"]);
 var mod0 = new SpeakersList(1,0);
