@@ -1,4 +1,4 @@
-# munisfun
+# MUNisFUN
 (Pronounced "em you en is eff you en")
 
 ###How to Run - With NodeJS
